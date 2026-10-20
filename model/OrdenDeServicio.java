@@ -3,16 +3,17 @@ public abstract class OrdenDeServicio implements Comparable<OrdenDeServicio> {
     private String codigo;
     private String nombreCliente;
     private int horaEstimada;
+    private double minutosEstimados;
     private boolean esMetropolitano;
     private int cantidadVisitas;
     private String estado;
     private double costoServicio;
     private double total;
 
-    public OrdenDeServicio( String nombreCliente, int horaEstimada,
-        boolean esMetropolitano, int cantidadVisitas, String estado, double total){
+    public OrdenDeServicio( String nombreCliente, int horaEstimada, double minutosEstimados, boolean esMetropolitano, int cantidadVisitas, String estado, double total){
             this.nombreCliente = nombreCliente;
             this.horaEstimada = horaEstimada;
+            this.minutosEstimados = minutosEstimados;
             this.esMetropolitano = esMetropolitano;
             this.cantidadVisitas = cantidadVisitas;
             this.estado = estado;
@@ -20,6 +21,13 @@ public abstract class OrdenDeServicio implements Comparable<OrdenDeServicio> {
     }
     public void setCodigo(String codigo){
         this.codigo = codigo;
+    }
+    
+    public double getMinutosEstimados() {
+        return minutosEstimados;
+    }
+    public void setMinutosEstimados(double minutosEstimados) {
+        this.minutosEstimados = minutosEstimados;
     }
     
     public String getCodigo(){
@@ -38,7 +46,7 @@ public abstract class OrdenDeServicio implements Comparable<OrdenDeServicio> {
         this.horaEstimada = horaEstimada;
     }
 
-    public int getHoraEstimada(){
+    public double getHoraEstimada(){
         return horaEstimada;
     }
 
@@ -81,6 +89,7 @@ public abstract class OrdenDeServicio implements Comparable<OrdenDeServicio> {
     public double getTotal(){
         return total;
     }
+    
     @Override
     public int compareTo(OrdenDeServicio otro) {
         return this.codigo.compareTo(otro.getCodigo());
