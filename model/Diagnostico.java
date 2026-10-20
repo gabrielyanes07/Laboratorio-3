@@ -6,25 +6,72 @@ public class Diagnostico extends OrdenDeServicio {
     private int diasEstimados;
     int cantDiagnosticos = 0;
 
-    public Diagnostico(int cantDiagnosticos, String nombreCliente, int horaEstimada, boolean esMetropolitano, int cantidadVisitas, String estado, double total) {
-        super( nombreCliente, horaEstimada, esMetropolitano, cantidadVisitas, estado, total);
+    public Diagnostico(String nombreCliente, int horaEstimada, double minutosEstimados, boolean esMetropolitano, int cantidadVisitas, String estado, double total) {
+        super( nombreCliente, horaEstimada,minutosEstimados, esMetropolitano, cantidadVisitas, estado, total);
         cantDiagnosticos++;
         this.codigo = "D -" + cantDiagnosticos;
-        if (!esMetropolitano) {
+        double horasEstimadas = horaEstimada + (minutosEstimados / 60.0);
+        if (horasEstimadas <1.5){
+        if(cantidadVisitas > 3){
+            if (!esMetropolitano) {
             this.diasEstimados = 2;
-            this.costoServicio = 225;
+            this.costoServicio = 265;
+            }
+            else{
+                this.costoServicio = 190;
+                this.diasEstimados = 1;
+            }
         }
         else{
-            this.costoServicio = 150;
-            this.diasEstimados = 1;
+            if (!esMetropolitano) {
+                this.diasEstimados = 2;
+                this.costoServicio = 225;
+        }
+            else{
+                this.costoServicio = 150;
+                this.diasEstimados = 1;
+        }
         }
     }
+    }
 
+    public static double cotizar(int horasEstimadas, int cantidadVisitas, boolean esMetropolitano) {
+        double horasTotales = horasEstimadas;
+        if (horasTotales < 1.5) {
+        if(cantidadVisitas > 3){
+            if (!esMetropolitano) {
+            double costosServicio = 265;
+            return costosServicio;
+            }
+            else{
+                double costosServicio = 190;
+                return costosServicio;
+            }
+        }
+        else{
+            if (!esMetropolitano) {
+                double costosServicio = 225;
+                return costosServicio;
+            }
+            else{
+                double costosServicio = 150;
+                return costosServicio;
+            }
+        }
+    }
+    return 0;
+        
+    }
     public double getCostoServicio() {
         return costoServicio;
     }
+    
     public String getCodigo() {
         return codigo;
+    }
+
+    public int getDiasEstimados() {
+        return diasEstimados;
     }
     @Override
     public String toString() {
