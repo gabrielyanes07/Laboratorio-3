@@ -1,80 +1,65 @@
 package model;
 
 public class Diagnostico extends OrdenDeServicio {
-    private double costoServicio;
-    private String codigo;
-    private int diasEstimados;
-    int cantDiagnosticos = 0;
+    private static int cantDiagnosticos = 0;
+
+    public Diagnostico(String nombreCliente, String direccion, double horasEstimadas, boolean esMetropolitano, String estado) {
+        super(nombreCliente, direccion, horasEstimadas, esMetropolitano, estado, esMetropolitano ? 150.0 : 225.0);
+        cantDiagnosticos++;
+        setCodigo("D -" + cantDiagnosticos);
+        setCostoServicio(calcularCosto());
+        setTotal(getCostoServicio());
+    }
 
     public Diagnostico(String nombreCliente, int horaEstimada, double minutosEstimados, boolean esMetropolitano, int cantidadVisitas, String estado, double total) {
-        super( nombreCliente, horaEstimada,minutosEstimados, esMetropolitano, cantidadVisitas, estado, total);
+        super(nombreCliente, horaEstimada, minutosEstimados, esMetropolitano, cantidadVisitas, estado, total);
         cantDiagnosticos++;
-        this.codigo = "D -" + cantDiagnosticos;
-        double horasEstimadas = horaEstimada + (minutosEstimados / 60.0);
-        if (horasEstimadas <1.5){
-        if(cantidadVisitas > 3){
-            if (!esMetropolitano) {
-            this.diasEstimados = 2;
-            this.costoServicio = 265;
-            }
-            else{
-                this.costoServicio = 190;
-                this.diasEstimados = 1;
-            }
-        }
-        else{
-            if (!esMetropolitano) {
-                this.diasEstimados = 2;
-                this.costoServicio = 225;
-        }
-            else{
-                this.costoServicio = 150;
-                this.diasEstimados = 1;
-        }
-        }
+        setCodigo("D -" + cantDiagnosticos);
+        setCostoServicio(calcularCosto());
+        setTotal(getCostoServicio());
     }
+
+    @Override
+    public double calcularCosto() {
+        return isEsMetropolitano() ? 150.0 : 225.0;
+    }
+
+    @Override
+    public int getTiempoEstimadoDias() {
+        return isEsMetropolitano() ? 1 : 2;
+    }
+
+    @Override
+    public int getMaxVisitasPermitidas() {
+        return 3;
+    }
+
+    @Override
+    public boolean requiereCertificacionRefrigeracion() {
+        return false;
+    }
+
+    @Override
+    public String getCategoria() {
+        return "Diagnóstico";
+    }
+
+    public static double cotizar(double horasEstimadas, boolean esMetropolitano) {
+        if (horasEstimadas <= 0 || horasEstimadas > 1.5) {
+            return 0;
+        }
+        return esMetropolitano ? 150.0 : 225.0;
     }
 
     public static double cotizar(int horasEstimadas, int cantidadVisitas, boolean esMetropolitano) {
-        double horasTotales = horasEstimadas;
-        if (horasTotales < 1.5) {
-        if(cantidadVisitas > 3){
-            if (!esMetropolitano) {
-            double costosServicio = 265;
-            return costosServicio;
-            }
-            else{
-                double costosServicio = 190;
-                return costosServicio;
-            }
-        }
-        else{
-            if (!esMetropolitano) {
-                double costosServicio = 225;
-                return costosServicio;
-            }
-            else{
-                double costosServicio = 150;
-                return costosServicio;
-            }
-        }
+        return cotizar((double) horasEstimadas, esMetropolitano);
     }
-    return 0;
-        
-    }
-    public double getCostoServicio() {
-        return costoServicio;
-    }
-    
-    public String getCodigo() {
-        return codigo;
+
+    public static int tiempoEstimado(boolean esMetropolitano) {
+        return esMetropolitano ? 1 : 2;
     }
 
     public int getDiasEstimados() {
-        return diasEstimados;
-    }
-    @Override
-    public String toString() {
-        return super.toString() + ", Tipo: Diagnóstico, Costo Servicio: " + costoServicio;
+        return getTiempoEstimadoDias();
     }
 }

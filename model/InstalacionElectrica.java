@@ -1,65 +1,73 @@
 package model;
-public class InstalacionElectrica extends OrdenDeServicio {
-    private double costoServicio;
-    private String codigo;
-    private int cantInstalaciones = 0;
-    private int diasEstimados;
+
+public class InstalacionElectrica extends Instalacion {
+    private static int cantInstalacionesElectricas = 0;
+    private double costMateriales;
+
+    public InstalacionElectrica(String nombreCliente, String direccion, double horasEstimadas, boolean esMetropolitano, int cantPuntos, double costMateriales, String estado) {
+        super(nombreCliente, direccion, horasEstimadas, esMetropolitano, cantPuntos, estado);
+        cantInstalacionesElectricas++;
+        setCodigo("IE -" + cantInstalacionesElectricas);
+        this.costMateriales = costMateriales;
+        setCostoServicio(calcularCosto());
+        setTotal(getCostoServicio());
+    }
 
     public InstalacionElectrica(int cantPuntos, double costMateriales, String nombreCliente, int horaEstimada, double minutosEstimados, boolean esMetropolitano, int cantidadVisitas, String estado, double total) {
-        super(nombreCliente, horaEstimada, minutosEstimados, esMetropolitano, cantidadVisitas, estado, total);
-        cantInstalaciones++;
-        this.codigo = "IE -" + cantInstalaciones;
-        if(cantidadVisitas > 2) {
-            if (!esMetropolitano) {
-                this.diasEstimados = 7;
-                this.costoServicio = 260 + (horaEstimada + minutosEstimados / 60.0 + Math.round(cantPuntos * 0.75)) * 90 + costMateriales * 0.05;
-            }
-            else{
-                this.diasEstimados = 5;
-                this.costoServicio = 335 + (horaEstimada + minutosEstimados / 60.0 + Math.round(cantPuntos * 0.75)) * 90 + costMateriales * 0.05;
-            }
+        super(cantPuntos, nombreCliente, horaEstimada, minutosEstimados, esMetropolitano, cantidadVisitas, estado, total);
+        cantInstalacionesElectricas++;
+        setCodigo("IE -" + cantInstalacionesElectricas);
+        this.costMateriales = costMateriales;
+        setCostoServicio(calcularCosto());
+        setTotal(getCostoServicio());
+    }
+
+    public double getCostMateriales() {
+        return costMateriales;
+    }
+
+    public void setCostMateriales(double costMateriales) {
+        this.costMateriales = costMateriales;
+    }
+
+    @Override
+    public double calcularCosto() {
+        return super.calcularCosto() + 120.0 + (costMateriales * 0.05);
+    }
+
+    @Override
+    public int getTiempoEstimadoDias() {
+        return super.getTiempoEstimadoDias() + 2;
+    }
+
+    @Override
+    public int getMaxVisitasPermitidas() {
+        return 2;
+    }
+
+    @Override
+    public boolean requiereCertificacionRefrigeracion() {
+        return false;
+    }
+
+    @Override
+    public String getCategoria() {
+        return "Instalación Eléctrica Certificada";
+    }
+
+    public static double cotizar(int cantPuntos, double horasEstimadas, boolean esMetropolitano, double costMateriales) {
+        if (cantPuntos <= 0 || horasEstimadas <= 0 || costMateriales < 0) {
+            return 0;
         }
-        else{
-            if (!esMetropolitano) {
-                this.diasEstimados = 7;
-                this.costoServicio = 220 + (horaEstimada + minutosEstimados / 60.0 + Math.round(cantPuntos * 0.75)) * 90 + costMateriales * 0.05;
-            }
-            else{
-                this.diasEstimados = 5;
-                this.costoServicio = 295 + (horaEstimada + minutosEstimados / 60.0 + Math.round(cantPuntos * 0.75)) * 90 + costMateriales * 0.05;
-            }  
-        }
+        double base = Instalacion.cotizar(cantPuntos, horasEstimadas, esMetropolitano);
+        return base + 120.0 + (costMateriales * 0.05);
     }
-    public double getCostoServicio() {
-        return costoServicio;
+
+    public static double cotizar(int cantidadVisitas, int cantPuntos, int horaEstimada, double minutosEstimados, boolean esMetropolitano, double costMateriales) {
+        return cotizar(cantPuntos, horaEstimada + (minutosEstimados / 60.0), esMetropolitano, costMateriales);
     }
-    public String getCodigo() {
-        return codigo;
-    }
-    
-    public static double cotizar(int cantidadVisitas, int cantPuntos, int horaEstimada,double minutosEstimados, boolean esMetropolitano, double costMateriales) {
-        if(cantidadVisitas > 2) {
-            if (!esMetropolitano) {
-                return  260 + (horaEstimada + minutosEstimados / 60.0 + Math.round(cantPuntos * 0.75)) * 90 + costMateriales * 0.05;
-            }
-            else{
-                return 335 + (horaEstimada + minutosEstimados / 60.0 + Math.round(cantPuntos * 0.75)) * 90 + costMateriales * 0.05;
-            }
-        }
-        else{
-            if (!esMetropolitano) {
-                return 220 + (horaEstimada + minutosEstimados / 60.0 + Math.round(cantPuntos * 0.75)) * 90 + costMateriales * 0.05;
-            }
-            else{
-                return 295 + (horaEstimada + minutosEstimados / 60.0 + Math.round(cantPuntos * 0.75)) * 90 + costMateriales * 0.05;
-            }  
-        }
-    }
-    public int getDiasEstimados() {
-        return diasEstimados;
-    }
-    @Override 
-    public String toString() {
-        return super.toString() + ", Tipo: Instalación Eléctrica, Costo Servicio: " + costoServicio;
+
+    public static int tiempoEstimado(boolean esMetropolitano) {
+        return Instalacion.tiempoEstimado(esMetropolitano) + 2;
     }
 }
