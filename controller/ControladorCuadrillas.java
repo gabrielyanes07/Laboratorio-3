@@ -428,7 +428,7 @@ public class ControladorCuadrillas {
     }
 
     private void iniciarJornada() {
-        vista.mostrarMensaje("\n--- INICIAR JORNADA ---");
+        vista.mostrarMensaje("INICIAR JORNADA");
         String codigoCuadrilla = vista.solicitarCodigo();
         Cuadrilla cuadrilla = getCuadrillaPorCodigo(codigoCuadrilla);
         if (cuadrilla == null) {
@@ -533,9 +533,8 @@ public class ControladorCuadrillas {
     }
 
     private void generarReportes() {
-        vista.mostrarMensaje("\n==========================================================");
-        vista.mostrarMensaje("                 REPORTES DE GERENCIA                     ");
         vista.mostrarMensaje("==========================================================");
+        vista.mostrarMensaje("                 REPORTES DE GERENCIA                     ");
 
         vista.mostrarMensaje("\n1. CANTIDAD DE ÓRDENES POR CATEGORÍA Y ESTADO:");
         String[] categorias = {"Diagnóstico", "Instalación", "Instalación Eléctrica Certificada", "Mantenimiento de Aire Acondicionado"};
